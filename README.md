@@ -1,4 +1,4 @@
-# msc-prueba-dev
+## msc-prueba-dev
 prueba tecnica desarrolladores
 
 # ETAPA 2 – PRUEBA PRÁCTICA

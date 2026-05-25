@@ -1,0 +1,182 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Mis Tareas - TaskFlow{% endblock %}
+
+{% block content %}
+<div class="row align-items-center mb-5">
+    <div class="col-md-6 col-lg-8">
+        <h1 class="display-5 fw-extrabold text-dark m-0">Mis Tareas</h1>
+        <p class="text-muted fs-6 mt-2 mb-0">Organiza, prioriza y gestiona tus actividades diarias de forma ágil.</p>
+    </div>
+    <div class="col-md-6 col-lg-4 text-md-end mt-3 mt-md-0">
+        <span class="badge bg-secondary-subtle text-secondary-emphasis rounded-pill px-3 py-2 fw-medium border">
+            Total: {{ tasks.count }} tarea{{ tasks.count|pluralize:"s" }}
+        </span>
+    </div>
+</div>
+
+<!-- Filtros y Barra de Búsqueda -->
+<div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden filter-card">
+    <div class="card-body p-4">
+        <form method="get" action="{% url 'task_list' %}" class="row g-3">
+            <!-- Mantener estado seleccionado al buscar -->
+            <input type="hidden" name="estado" value="{{ selected_estado }}">
+            
+            <div class="col-12 col-lg-7">
+                <div class="input-group input-group-lg search-group">
+                    <span class="input-group-text bg-transparent border-end-0 text-muted ps-3">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" name="q" value="{{ search_query }}" class="form-control border-start-0 ps-1" placeholder="Buscar tareas por título..." aria-label="Buscar tareas">
+                    {% if search_query or selected_estado %}
+                        <a href="{% url 'task_list' %}" class="btn btn-outline-secondary d-flex align-items-center px-3" title="Limpiar filtros">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    {% endif %}
+                    <button class="btn btn-primary px-4 fw-medium" type="submit">Buscar</button>
+                </div>
+            </div>
+            
+            <!-- Selector de Estado Móvil / Responsive -->
+            <div class="col-12 col-lg-5 d-flex align-items-center justify-content-lg-end">
+                <div class="d-none d-md-flex gap-2">
+                    <a href="?q={{ search_query }}" class="btn btn-sm rounded-pill px-3 py-2 {% if not selected_estado %}btn-dark{% else %}btn-outline-secondary{% endif %}">
+                        Todas
+                    </a>
+                    {% for estado_val, estado_lbl in estado_choices %}
+                        <a href="?estado={{ estado_val }}&q={{ search_query }}" 
+                           class="btn btn-sm rounded-pill px-3 py-2 
+                           {% if selected_estado == estado_val %}
+                               {% if estado_val == 'Pendiente' %}btn-warning-custom
+                               {% elif estado_val == 'En Proceso' %}btn-info-custom
+                               {% else %}btn-success-custom{% endif %}
+                           {% else %}
+                               btn-outline-secondary
+                           {% endif %}">
+                            {{ estado_lbl }}
+                        </a>
+                    {% endfor %}
+                </div>
+                <!-- Dropdown para pantallas móviles -->
+                <div class="d-md-none w-100">
+                    <label class="form-label text-muted small fw-medium mb-1">Filtrar por Estado:</label>
+                    <select onchange="location = this.value;" class="form-select">
+                        <option value="?q={{ search_query }}" {% if not selected_estado %}selected{% endif %}>Todos los estados</option>
+                        {% for estado_val, estado_lbl in estado_choices %}
+                            <option value="?estado={{ estado_val }}&q={{ search_query }}" {% if selected_estado == estado_val %}selected{% endif %}>
+                                {{ estado_lbl }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Listado de Tareas -->
+<div class="row g-4">
+    {% if tasks %}
+        {% for task in tasks %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 task-card position-relative overflow-hidden">
+                    <!-- Indicador lateral de prioridad -->
+                    <div class="priority-strip 
+                        {% if task.prioridad == 'Alta' %}bg-danger
+                        {% elif task.prioridad == 'Media' %}bg-warning
+                        {% else %}bg-info{% endif %}">
+                    </div>
+                    
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-3 gap-2">
+                            <!-- Prioridad Badge -->
+                            <span class="badge rounded-pill fw-semibold px-2.5 py-1 text-uppercase fs-xs
+                                {% if task.prioridad == 'Alta' %}bg-danger-subtle text-danger border border-danger-subtle
+                                {% elif task.prioridad == 'Media' %}bg-warning-subtle text-warning-emphasis border border-warning-subtle
+                                {% else %}bg-info-subtle text-info-emphasis border border-info-subtle{% endif %}">
+                                <i class="bi bi-flag-fill me-1"></i>{{ task.prioridad }}
+                            </span>
+                            
+                            <!-- Estado Badge -->
+                            <span class="badge rounded-pill fw-semibold px-2.5 py-1 text-uppercase fs-xs
+                                {% if task.estado == 'Finalizado' %}bg-success-subtle text-success border border-success-subtle
+                                {% elif task.estado == 'En Proceso' %}bg-primary-subtle text-primary border border-primary-subtle
+                                {% else %}bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle{% endif %}">
+                                {{ task.estado }}
+                            </span>
+                        </div>
+                        
+                        <!-- Título de la Tarea -->
+                        <h4 class="card-title fw-bold text-dark mb-2 font-heading">
+                            <a href="{% url 'task_detail' task.pk %}" class="text-decoration-none text-dark-emphasis link-primary-hover">
+                                {{ task.titulo }}
+                            </a>
+                        </h4>
+                        
+                        <!-- Descripción corta -->
+                        <p class="card-text text-muted flex-grow-1 mb-4 text-break fs-sm">
+                            {% if task.descripcion %}
+                                {{ task.descripcion|truncatechars:100 }}
+                            {% else %}
+                                <span class="fst-italic text-black-50">Sin descripción disponible.</span>
+                            {% endif %}
+                        </p>
+                        
+                        <hr class="border-secondary border-opacity-10 my-3">
+                        
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <!-- Fecha Límite -->
+                            <div class="text-muted d-flex align-items-center fs-xs">
+                                <i class="bi bi-calendar-event me-1.5 text-secondary"></i>
+                                <span>Límite: <strong class="text-dark-emphasis">{{ task.fecha_limite|date:"d M Y" }}</strong></span>
+                            </div>
+                            
+                            <!-- Acciones rápidas -->
+                            <div class="d-flex gap-1.5">
+                                <a href="{% url 'task_detail' task.pk %}" class="btn btn-light btn-icon rounded-circle shadow-sm" title="Ver Detalles">
+                                    <i class="bi bi-eye text-primary"></i>
+                                </a>
+                                <a href="{% url 'task_edit' task.pk %}" class="btn btn-light btn-icon rounded-circle shadow-sm" title="Editar">
+                                    <i class="bi bi-pencil text-secondary"></i>
+                                </a>
+                                <a href="{% url 'task_delete' task.pk %}" class="btn btn-light btn-icon rounded-circle shadow-sm" title="Eliminar">
+                                    <i class="bi bi-trash text-danger"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <!-- Estado vacío -->
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                <div class="card-body py-5">
+                    <div class="empty-icon-wrapper mb-4">
+                        <i class="bi bi-clipboard-x text-black-50 display-1"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark">No se encontraron tareas</h3>
+                    <p class="text-muted mx-auto max-width-md mt-2">
+                        {% if search_query or selected_estado %}
+                            No hay tareas que coincidan con los filtros de búsqueda actuales. Intenta limpiar los filtros o cambiar el texto de búsqueda.
+                        {% else %}
+                            Aún no has creado ninguna tarea en tu tablero. ¡Comienza agregando tu primera actividad!
+                        {% endif %}
+                    </p>
+                    <div class="mt-4">
+                        {% if search_query or selected_estado %}
+                            <a href="{% url 'task_list' %}" class="btn btn-outline-primary px-4 py-2 rounded-pill me-2">
+                                <i class="bi bi-arrow-left-short fs-5 align-middle"></i> Limpiar Filtros
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'task_create' %}" class="btn btn-primary px-4 py-2 rounded-pill">
+                            <i class="bi bi-plus-lg me-1"></i> Crear Nueva Tarea
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

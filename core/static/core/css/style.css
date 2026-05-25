@@ -1,0 +1,257 @@
+/* variables de diseño premium */
+:root {
+    --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    --font-heading: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+    --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+    
+    /* Colores personalizados de estado */
+    --status-pendiente-bg: #fffcf0;
+    --status-pendiente-border: #fef08a;
+    --status-pendiente-text: #854d0e;
+    
+    --status-proceso-bg: #eff6ff;
+    --status-proceso-border: #bfdbfe;
+    --status-proceso-text: #1e40af;
+    
+    --status-finalizado-bg: #f0fdf4;
+    --status-finalizado-border: #bbf7d0;
+    --status-finalizado-text: #166534;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: #f8fafc;
+    color: #334155;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+}
+
+.font-accent {
+    font-family: var(--font-heading);
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Glassmorphism Navbar */
+.glass-nav {
+    background-color: rgba(15, 23, 42, 0.9) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.navbar-brand {
+    letter-spacing: -0.03em;
+}
+
+.nav-link {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.75) !important;
+    transition: color 0.2s ease;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.5rem;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Botón Crear Tarea Navbar */
+.btn-create-task {
+    background: var(--primary-gradient);
+    border: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-create-task:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+}
+
+/* Cards Premium */
+.card {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Task Card Hover and Design */
+.task-card {
+    border: 1px solid rgba(0, 0, 0, 0.03) !important;
+    background-color: #ffffff;
+}
+
+.task-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.08) !important;
+}
+
+.priority-strip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+}
+
+/* Badges de Estado y Prioridad Personalizados */
+.fs-xs {
+    font-size: 0.75rem;
+}
+
+.fs-2xs {
+    font-size: 0.68rem;
+}
+
+.bg-danger-subtle {
+    background-color: #fef2f2 !important;
+}
+
+.bg-warning-subtle {
+    background-color: #fffbeb !important;
+}
+
+.bg-info-subtle {
+    background-color: #f0f9ff !important;
+}
+
+/* Botones de Filtro Personalizados */
+.btn-warning-custom {
+    background-color: var(--status-pendiente-bg);
+    border-color: var(--status-pendiente-border);
+    color: var(--status-pendiente-text);
+}
+
+.btn-warning-custom:hover {
+    background-color: #fef08a;
+    color: var(--status-pendiente-text);
+}
+
+.btn-info-custom {
+    background-color: var(--status-proceso-bg);
+    border-color: var(--status-proceso-border);
+    color: var(--status-proceso-text);
+}
+
+.btn-info-custom:hover {
+    background-color: #bfdbfe;
+    color: var(--status-proceso-text);
+}
+
+.btn-success-custom {
+    background-color: var(--status-finalizado-bg);
+    border-color: var(--status-finalizado-border);
+    color: var(--status-finalizado-text);
+}
+
+.btn-success-custom:hover {
+    background-color: #bbf7d0;
+    color: var(--status-finalizado-text);
+}
+
+/* Botones de Iconos Redondos */
+.btn-icon {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+    background-color: #f8fafc;
+    transform: scale(1.08);
+}
+
+/* Estilos de Detalles de Tarea */
+.detail-card {
+    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Timeline de Comentarios */
+.comment-timeline {
+    border-left: 2px solid #e2e8f0;
+    padding-left: 20px;
+    margin-left: 10px;
+}
+
+.comment-item {
+    position: relative;
+}
+
+.comment-icon-dot {
+    width: 12px;
+    height: 12px;
+    left: -27px;
+    top: 24px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 0 2px #6366f1;
+}
+
+/* Input Search Focus Effects */
+.search-group .form-control:focus {
+    box-shadow: none;
+    border-color: #cbd5e1;
+}
+
+.search-group {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.search-group:focus-within {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+.search-group .input-group-text, .search-group .form-control, .search-group .btn {
+    border: none;
+}
+
+/* Form Styles */
+.form-control, .form-select {
+    border-radius: 0.5rem;
+    border: 1px solid #cbd5e1;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+.uppercase-tracking-xs {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+/* Footers styling */
+footer {
+    margin-top: auto;
+}
+
+/* Responsive adjustment */
+@media (max-width: 767.98px) {
+    .btn-create-task {
+        width: 100%;
+        text-align: center;
+    }
+}

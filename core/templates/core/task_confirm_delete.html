@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Eliminar Tarea - TaskFlow{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mt-5">
+            <div class="card-body p-4 p-md-5 text-center">
+                <div class="delete-icon-wrapper text-danger mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 rounded-circle" style="width: 80px; height: 80px;">
+                        <i class="bi bi-exclamation-triangle fs-1"></i>
+                    </div>
+                </div>
+                
+                <h3 class="fw-bold text-dark mb-2">¿Confirmas la eliminación?</h3>
+                <p class="text-muted small px-3">Esta acción es permanente y no se podrá deshacer. Se eliminarán también todos los comentarios asociados a esta tarea.</p>
+                
+                <div class="bg-light p-4 rounded-4 text-center my-4 border border-light-subtle">
+                    <span class="text-black-50 small d-block mb-1.5 uppercase-tracking-xs">Tarea a eliminar</span>
+                    <h5 class="fw-bold text-dark-emphasis mb-0">{{ task.titulo }}</h5>
+                </div>
+
+                <form method="post" action="{% url 'task_delete' task.pk %}">
+                    {% csrf_token %}
+                    <div class="d-flex gap-3 justify-content-center pt-2">
+                        <a href="{% url 'task_detail' task.pk %}" class="btn btn-light px-4 py-2.5 rounded-pill fw-medium flex-grow-1">
+                            No, Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-danger px-4 py-2.5 rounded-pill fw-medium flex-grow-1 shadow-sm">
+                            Sí, Eliminar Tarea
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
